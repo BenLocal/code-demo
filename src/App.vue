@@ -1,23 +1,43 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, shallowRef } from 'vue'
+import { Codemirror } from 'vue-codemirror'
+import { javascript } from '@codemirror/lang-javascript'
+import { oneDark } from '@codemirror/theme-one-dark'
+
+const code = ref(`console.log('Hello, world!')`)
+const extensions = [javascript(), oneDark]
+
+// Codemirror EditorView instance ref
+const view = shallowRef()
+const handleReady = (payload) => {
+  view.value = payload.view
+}
+
+// Status is available at all times via Codemirror EditorView
+const getCodemirrorStates = () => {
+  const state = view.value.state
+  const ranges = state.selection.ranges
+  const selected = ranges.reduce((r, range) => r + range.to - range.from, 0)
+  console.log('Selected characters:', selected)
+  const cursor = ranges[0].anchor
+  console.log('Cursor position:', cursor)
+  const length = state.doc.length
+  console.log('Document length:', length)
+  const lines = state.doc.lines
+  console.log('Number of lines:', lines)
+}
+
+const handleChange = (payload) => {
+  console.log('Code changed:', payload)
+  getCodemirrorStates()
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <div>
+    <codemirror v-model="code" placeholder="Code goes here..." :style="{ height: '400px' }" :autofocus="true"
+      :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" @change="handleChange" />
+  </div>
 </template>
 
 <style scoped>
