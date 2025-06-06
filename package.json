@@ -21,6 +21,7 @@
     "@codemirror/theme-one-dark": "^6.1.2",
     "codemirror": "^6.0.1",
     "codemirror-languageserver": "^1.12.1",
+    "events": "^3.3.0",
     "vue": "^3.5.13",
     "vue-codemirror": "^6.1.1",
     "vue-router": "^4.5.0"

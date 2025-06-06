@@ -14,7 +14,19 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // 添加 events 模块的 polyfill
+      'events': 'events'
     },
   },
+  define: {
+    global: 'globalThis',
+  },
+  optimizeDeps: {
+    include: ['events']
+  },
+  server: {
+    proxy: {
+    }
+  }
 })
